@@ -1,6 +1,9 @@
 ---
 name: aiofm-adapter
 description: Use this skill when an agent needs to work with a dash.aiofm.cc workspace through the public Python REST adapter instead of MCP. It covers install, environment setup, tool discovery, tool calls, and prompt generation for Claude Code, Codex, OpenHands, or generic shell-based runtimes.
+homepage: https://github.com/aiofmadmin/aiofm-adapter
+user-invocable: true
+metadata: {"openclaw":{"emoji":"🧰","homepage":"https://github.com/aiofmadmin/aiofm-adapter","skillKey":"aiofm-adapter","primaryEnv":"DASH_AIOFM_AGENT_KEY","requires":{"anyBins":["uv","python3","python"]}}}
 ---
 
 # aiofm-adapter
@@ -26,7 +29,7 @@ Use this repository as the default integration path for `dash.aiofm.cc` workspac
 If the console script is unavailable, use the module path from the repo root:
 
 ```bash
-PYTHONPATH=src python -m aiofm_adapter.cli tools list --json
+PYTHONPATH={baseDir}/src python -m aiofm_adapter.cli tools list --json
 ```
 
 ## Tool contract
@@ -45,6 +48,14 @@ Use the built-in prompt generator when the runtime needs copy-ready setup text:
 - `aiofm-adapter prompt codex`
 - `aiofm-adapter prompt openhands`
 - `aiofm-adapter prompt generic`
+
+## OpenClaw config hints
+
+If OpenClaw manages the skill config, use `skills.entries."aiofm-adapter"` and map:
+
+- `apiKey` to `DASH_AIOFM_AGENT_KEY`
+- `env.AIOFM_BASE_URL` to the dashboard base URL
+- `env.AIOFM_WORKSPACE_ID` to the workspace id
 
 ## When to read other files
 
