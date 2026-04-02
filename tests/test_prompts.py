@@ -24,6 +24,9 @@ class PromptTests(TestCase):
 
         self.assertIn("Use only the official aiofm REST adapter `aiofm-adapter`", brief)
         self.assertIn(self.config.manifest_url, brief)
+        self.assertIn("create_post must include scheduled_at", brief)
+        self.assertIn("assume UTC", brief)
+        self.assertIn("Only one future post per hour is allowed for the same social_account_id", brief)
         self.assertIn("submit_for_approval", brief)
 
     def test_build_prompt_for_claude_contains_runtime_title(self) -> None:
@@ -35,3 +38,13 @@ class PromptTests(TestCase):
 
         self.assertIn("Claude Code setup", prompt)
         self.assertIn("uv tool install --refresh", prompt)
+
+    def test_build_prompt_for_generic_mentions_scheduling_rules(self) -> None:
+        prompt = build_prompt_for_target(
+            target="generic",
+            config=self.config,
+            repo_url="https://github.com/aiofmadmin/aiofm-adapter",
+        )
+
+        self.assertIn('"scheduled_at":"2026-04-03T14:00:00Z"', prompt)
+        self.assertIn("Dashboard times are displayed in browser-local time, but stored and enforced in UTC.", prompt)

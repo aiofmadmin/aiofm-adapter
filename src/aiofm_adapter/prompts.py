@@ -33,6 +33,11 @@ Strict rules:
 - Never invent publish success, approval state, or account health.
 - If an account or provider looks broken, report it and continue preparing drafts.
 - Ask for missing goal, audience, CTA, language, or timing when required.
+- create_post must include scheduled_at.
+- If the operator does not specify a timezone, assume UTC.
+- Dashboard times are displayed in browser-local time, but stored and enforced in UTC.
+- Only one future post per hour is allowed for the same social_account_id.
+- If scheduled_at is missing or conflicts with spacing rules, stop and surface the API error exactly.
 
 Connection:
 - rest_endpoint: {config.rest_endpoint}
@@ -87,7 +92,15 @@ tools_url: {config.tools_url}
 CLI quickstart
 aiofm-adapter tools list --json
 aiofm-adapter tools call list_accounts --json
+aiofm-adapter tools call create_post --input-json '{{"social_account_id":"<account_id>","title":"Launch draft","scheduled_at":"2026-04-03T14:00:00Z","image_binary":"<base64>"}}' --json
 aiofm-adapter tools call report_activity --input-json '{{"summary":"Prepared draft batch"}}' --json
+
+Scheduling rules
+- create_post must include scheduled_at.
+- If the operator does not specify a timezone, assume UTC.
+- Dashboard times are displayed in browser-local time, but stored and enforced in UTC.
+- Only one future post per hour is allowed for the same social_account_id.
+- If scheduled_at is missing or conflicts with the one-post-per-hour rule, stop and report the API error exactly.
 
 Raw REST examples
 curl -fsS {config.manifest_url} -H "Authorization: Bearer {config.agent_key}"

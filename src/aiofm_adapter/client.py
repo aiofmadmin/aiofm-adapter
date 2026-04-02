@@ -13,6 +13,7 @@ WORKSPACE_ID_ENV_NAME = "AIOFM_WORKSPACE_ID"
 DEFAULT_CLIENT_NAME = "aiofm-adapter"
 DEFAULT_CLIENT_VERSION = "0.1.0"
 DEFAULT_TIMEOUT_SECONDS = 30
+INVALID_INPUT_STATUS_CODE = 10
 
 
 class AdapterError(RuntimeError):
@@ -138,6 +139,20 @@ def _request_json(
         raise AdapterError(f"Failed to reach adapter server: {exc.reason}") from exc
 
 
+def _validate_tool_arguments(*, tool_name: str, arguments: dict[str, Any]) -> None:
+    if tool_name != "create_post":
+        return
+
+    scheduled_at = arguments.get("scheduled_at")
+    if isinstance(scheduled_at, str) and scheduled_at.strip():
+        return
+
+    raise AdapterError(
+        "create_post requires scheduled_at in ISO 8601 UTC format.",
+        status_code=INVALID_INPUT_STATUS_CODE,
+    )
+
+
 def get_manifest(config: AdapterConfig) -> dict[str, Any]:
     return _request_json(url=config.manifest_url, method="GET", config=config)
 
@@ -147,9 +162,12 @@ def list_tools(config: AdapterConfig) -> dict[str, Any]:
 
 
 def call_tool(config: AdapterConfig, *, tool_name: str, arguments: dict[str, Any] | None = None) -> dict[str, Any]:
+    normalized_arguments = arguments or {}
+    _validate_tool_arguments(tool_name=tool_name, arguments=normalized_arguments)
+
     return _request_json(
         url=f"{config.tools_url}/{tool_name}",
         method="POST",
         config=config,
-        payload={"arguments": arguments or {}},
+        payload={"arguments": normalized_arguments},
     )
