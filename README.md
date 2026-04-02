@@ -46,8 +46,17 @@ aiofm-adapter doctor --json
 aiofm-adapter manifest --json
 aiofm-adapter tools list --json
 aiofm-adapter tools call list_accounts --json
+aiofm-adapter tools call create_post --input-json '{"social_account_id":"<account_id>","title":"Launch draft","scheduled_at":"2026-04-03T14:00:00Z","image_binary":"<base64>"}' --json
 aiofm-adapter tools call report_activity --input-json '{"summary":"Prepared draft batch"}' --json
 ```
+
+## Scheduling rules
+
+- `create_post` must include `scheduled_at`
+- if the operator does not specify a timezone, assume UTC
+- dashboard times are displayed in browser-local time, but stored and enforced in UTC
+- only one future post per hour is allowed for the same `social_account_id`
+- if `scheduled_at` is missing or conflicts with spacing rules, surface the API error exactly
 
 ## Direct REST contract
 

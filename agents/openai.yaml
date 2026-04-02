@@ -1,7 +1,7 @@
 interface:
   display_name: "aiofm Adapter"
   short_description: "Use dash.aiofm.cc via REST"
-  default_prompt: "Use $aiofm-adapter to connect an agent to a dash.aiofm.cc workspace without MCP."
+  default_prompt: "Use $aiofm-adapter to connect an agent to a dash.aiofm.cc workspace without MCP. For create_post, always include scheduled_at in UTC."
 
 policy:
   allow_implicit_invocation: true

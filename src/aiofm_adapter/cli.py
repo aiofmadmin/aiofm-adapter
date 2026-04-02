@@ -9,6 +9,7 @@ from aiofm_adapter.client import (
     DEFAULT_CLIENT_NAME,
     DEFAULT_CLIENT_VERSION,
     AdapterError,
+    INVALID_INPUT_STATUS_CODE,
     build_config,
     call_tool,
     get_manifest,
@@ -18,7 +19,7 @@ from aiofm_adapter.prompts import build_agent_brief, build_prompt_for_target
 
 
 REPO_URL = "https://github.com/aiofmadmin/aiofm-adapter"
-EXIT_INVALID_INPUT = 10
+EXIT_INVALID_INPUT = INVALID_INPUT_STATUS_CODE
 EXIT_CONFIGURATION = 20
 EXIT_REMOTE_ERROR = 30
 
